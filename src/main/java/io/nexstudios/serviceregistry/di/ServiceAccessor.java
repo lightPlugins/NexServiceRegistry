@@ -33,6 +33,13 @@ public final class ServiceAccessor {
     return owner == null ? Optional.empty() : Optional.ofNullable(owner.name());
   }
 
+  public ServiceOwner owner() {
+    if (owner == null) {
+      throw new IllegalStateException("No ServiceOwner available in this ServiceAccessor");
+    }
+    return owner;
+  }
+
   public <T extends Service> T getService(Class<T> type) {
     return registry.require(type);
   }

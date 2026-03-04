@@ -42,4 +42,27 @@ class ServiceAccessorTest {
 
     assertTrue(acc.findService(B.class).isEmpty());
   }
+
+  static final class OwnerImpl implements ServiceOwner {
+    private final String name;
+    OwnerImpl(String name) { this.name = name; }
+    @Override public String name() { return name; }
+  }
+
+  interface C extends Service {}
+
+  static final class CImpl implements C {
+    final ServiceOwner owner;
+    CImpl(ServiceOwner owner) { this.owner = owner; }
+  }
+
+  @Test
+  void create_injects_serviceOwner_instance() {
+    ServiceOwner owner = new OwnerImpl("nex");
+    ServiceAccessor acc = new ServiceAccessor(new DefaultServiceRegistry(), owner);
+
+    CImpl c = acc.create(CImpl.class);
+    assertNotNull(c);
+    assertSame(owner, c.owner);
+  }
 }
