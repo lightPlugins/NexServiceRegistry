@@ -69,4 +69,16 @@ public final class ServiceAccessor {
     validator.validateDependencies(this, implType);
     return instantiator.create(this, implType);
   }
+
+  public void install(ServiceModule module) {
+    Objects.requireNonNull(module, "module must not be null");
+    module.install(this);
+  }
+
+  public void installAll(Iterable<? extends ServiceModule> modules) {
+    Objects.requireNonNull(modules, "modules must not be null");
+    for (ServiceModule m : modules) {
+      install(m);
+    }
+  }
 }
